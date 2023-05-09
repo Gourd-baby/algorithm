@@ -6,6 +6,8 @@ package com.guigu.cn;
  * description:
  * 演示notify是否是随机唤醒线程么？
  * 不是，hotspot是按顺序释放，notify则按照LIFO,先进等待池中的线程，最后释放，与notify相反
+ *
+ * 总之，wait是暂时释放锁，notify是在同步代码块执行完之后释放锁。两个方法都会释放锁
  * Author:crj
  * Create:2023/5/9 15:07
  */
@@ -54,7 +56,10 @@ public class NotifyTest{
             synchronized (lock) {
                 lock.notify();
 //                lock.notifyAll();
-//                TimeUnit.MILLISECONDS.sleep(10);
+//                TimeUnit.MILLISECONDS.sleep(10);//加了这个方法，不会立马释放锁。虽然lock.notify()执行了
+                    //比如A线程被唤醒了，但是A在锁池中还没有抢到锁，因为，得等到TimeUnit.MILLISECONDS.sleep(10)这个
+                    //方法执行完之后才能获得，但是问题又来了，当执行完这个方法，锁释放了，A线程需要，可 synchronized (lock)
+                //也要，就导致锁竞争，这是随机的，从而导致这样演示的notify不是顺序的，而是随机的
             }
             TimeUnit.MILLISECONDS.sleep(10);
         }
