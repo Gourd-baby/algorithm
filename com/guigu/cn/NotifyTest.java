@@ -8,6 +8,7 @@ package com.guigu.cn;
  * 不是，hotspot是按顺序释放，notify则按照LIFO,先进等待池中的线程，最后释放，与notify相反
  *
  * 总之，wait是暂时释放锁，notify是在同步代码块执行完之后释放锁。两个方法都会释放锁
+ * 而且，两个方法在被调用之前，都需要获取锁，才能执行这两个方法。可以理解为这是hotspot的一种设计
  * Author:crj
  * Create:2023/5/9 15:07
  */
